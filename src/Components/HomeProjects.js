@@ -11,19 +11,36 @@ import Grid from "@mui/material/Grid";
 import { Box } from "@mui/material";
 import { Stack } from "@mui/system";
 import { styled } from '@mui/material/styles';
+import { doc, getDocs, collection } from "firebase/firestore"
+import { firestore } from './Firebase'
 import Paper from '@mui/material/Paper';
 const HomeProjects = () => {
   const [projects, setProjects] = useState([]);
-
+  const projectList = [];
   useEffect(() => {
-    axios
-      .get("http://localhost:5000/project")
-      .then((res) => {
-        setProjects(res.data);
-      })
-      .catch((err) => console.log(err));
-  }, []);
+    const getProgect = async () => {
+      const querySnapshot = await getDocs(collection(firestore, "projects"));
+      console.log(querySnapshot.data);
+      //
+      querySnapshot.forEach((doc) => {
+        // doc.data() is never undefined for query doc snapshots
+        projectList.push({ id: doc.id, ...doc.data() });
+        console.log(doc.data())
+      });
+      setProjects(projectList);
+    }
 
+    
+      getProgect();
+      //   axios
+      //     .get("http://localhost:5000/project")
+      //     .then((res) => {
+      //       setProjects(res.data);
+      //     })
+      //     .catch((err) => console.log(err));
+      // }, []);
+    }
+,[])
   const Item = styled(Paper)(({ theme }) => ({
     backgroundColor: '#373e98',
     textAlign: 'center',

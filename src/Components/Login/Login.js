@@ -2,7 +2,8 @@ import { React, useState } from "react";
 import Box from "@mui/material/Box";
 import TextField from "@mui/material/TextField";
 import { Button, Card, CardContent, Typography } from "@mui/material";
-
+import { auth } from '../Firebase';
+import signInWithEmailAndPassword from "firebase/auth";
 import axios from 'axios'
 import { useNavigate } from 'react-router-dom';
 const Login = () => {
@@ -12,28 +13,30 @@ const Login = () => {
   const [pwd, setPwd] = useState();
 
   const login = () => {
+    auth.signInWithEmailAndPassword(email, pwd) 
     
-    axios.post(`http://localhost:5000/login/${email}`, { password:pwd })
-      .then((data) => {
-        console.log(data);
-        if (data.data == 'Invalid') {
-          alert('Wrong')
-        } else {
-          sessionStorage.setItem('role', data.data.role)
-          sessionStorage.setItem('mail',data.data.email)
-          if (data.data.role) {
-            navigate('/adminDashboard');
-          } else {
-            navigate('/')
-          }
+    
+    // axios.post(`http://localhost:5000/login/${email}`, { password:pwd })
+    //   .then((data) => {
+    //     console.log(data);
+    //     if (data.data == 'Invalid') {
+    //       alert('Wrong')
+    //     } else {
+    //       sessionStorage.setItem('role', data.data.role)
+    //       sessionStorage.setItem('mail',data.data.email)
+    //       if (data.data.role) {
+    //         navigate('/adminDashboard');
+    //       } else {
+    //         navigate('/')
+    //       }
           
           
-        }
+    //     }
         
         
-      }).catch((err) => {
-        console.log(err)
-    })
+    //   }).catch((err) => {
+    //     console.log(err)
+    // })
   }
 
   return (

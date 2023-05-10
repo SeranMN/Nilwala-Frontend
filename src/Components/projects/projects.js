@@ -1,7 +1,7 @@
 import { useState, useEffect, forwardRef, React } from "react";
 import axios from "axios";
 import Modal from "@mui/material/Modal";
-import {  TextareaAutosize, Typography } from "@mui/material";
+import { TextareaAutosize, Typography } from "@mui/material";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
@@ -19,11 +19,17 @@ import { FormLabel } from "@mui/material";
 import { useDispatch } from 'react-redux';
 import { setView } from '../../store/reducers/containerReducer';
 import { setId } from "../../store/reducers/projectReducer";
-
+import { firestore } from '../Firebase'
+import { addDoc, collection } from '@firebase/firestore'
+import { doc, getDocs } from "firebase/firestore"
+import { async } from "@firebase/util";
 const Projects = () => {
-   const dispatch = useDispatch()
-   const role = sessionStorage.getItem('role')
- 
+
+  const ref = collection(firestore, "projects")
+
+  const dispatch = useDispatch()
+  const role = sessionStorage.getItem('role')
+
   const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
@@ -32,7 +38,7 @@ const Projects = () => {
   const [projectName, setProjectName] = useState();
   const [date, SetDate] = useState("");
   const [description, setDescription] = useState();
-  const [photo,setPhoto] = useState()
+  const [photo, setPhoto] = useState()
 
   const Alert = forwardRef(function Alert(props, ref) {
     return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
@@ -50,50 +56,84 @@ const Projects = () => {
     setOpenSnack(false);
   };
 
-  
-console.log(photo)
+
+  console.log(photo)
 
   const onSubmit = async () => {
     console.log("photo", photo)
     let formData = new FormData();
-    formData.append('file', photo)
-    formData.append('name', projectName)
-    formData.append('Date', date.$D + "/" + date.$M + "/" + date.$y)
-    formData.append('Description', description)
-    formData.append('fileName', photo.name)
-    axios
-      .post("http://localhost:5000/project/add", formData)
-      .then(() => {
-        setMsg("Successfully Added Projects");
+    //  // formData.append('file', photo)
+    //   formData.append('name', projectName)
+    //   formData.append('Date', date.$D + "/" + date.$M + "/" + date.$y)
+    //   formData.append('Description', description)
+    //   //formData.append('fileName', photo.name)
+
+    const data = {
+      name: projectName,
+      Date: date.$D + "/" + date.$M + "/" + date.$y,
+      Description: description,
+
+    }
+
+    try {
+      addDoc(ref, data)
+      setMsg("Successfully Added Projects");
         SetSeverity("success");
         setOpenSnack(true);
         setToggle(!togle)
-      })
-      .catch((err) => {
-        setMsg("oops! Somthing Went Wrong");
-        SetSeverity("error");
-        setOpenSnack(true);
-        console.log(err);
-      });
+    } catch (e) {
+      console.log(e);
+    }
+    // axios
+    //   .post("http://localhost:5000/project/add", formData)
+    //   .then(() => {
+    //     setMsg("Successfully Added Projects");
+    //     SetSeverity("success");
+    //     setOpenSnack(true);
+    //     setToggle(!togle)
+    //   })
+    //   .catch((err) => {
+    //     setMsg("oops! Somthing Went Wrong");
+    //     SetSeverity("error");
+    //     setOpenSnack(true);
+    //     console.log(err);
+    //   });
 
     setOpen(false);
   };
 
-  
-  const [sValue,setSvalue] = useState('')
+
+  const [sValue, setSvalue] = useState('')
 
   const [projects, setProjects] = useState([]);
-
-  useEffect(() => {
-    axios
-      .get("http://localhost:5000/project")
-      .then((res) => {
-        setProjects(res.data);
-      })
-      .catch((err) => console.log(err));
-  }, [togle]);
-
+  const projectList = [];
   
+  useEffect(() => {
+    const getProgect = async () => {
+      const querySnapshot = await getDocs(collection(firestore, "projects"));
+      console.log(querySnapshot.data);
+      //
+      querySnapshot.forEach((doc) => {
+        // doc.data() is never undefined for query doc snapshots
+        projectList.push({ id: doc.id, ...doc.data() });
+      });
+      setProjects(projectList);
+
+     
+      // axios
+      //   .get("http://localhost:5000/project")
+      //   .then((res) => {
+      //     setProjects(res.data);
+      //   })
+      //   .catch((err) => console.log(err));
+    }
+    getProgect();
+}, [togle]);
+
+
+   
+
+
   const style = {
     position: "absolute",
     top: "50%",
@@ -116,22 +156,19 @@ console.log(photo)
       <div div style={{
         position: "static",
         top: 10,
-        marginTop:10
+        marginTop: 10
       }
       }>
-      <TextField id="outlined-basic" label="Search" variant="outlined" style={{ width: 400 }} 
-        value = {sValue}
-        onChange={(e) => {
-          setSvalue (e.target.value.toLowerCase())
-          
+        <TextField id="outlined-basic" label="Search" variant="outlined" style={{ width: 400 }}
+          value={sValue}
+          onChange={(e) => {
+            setSvalue(e.target.value.toLowerCase())
+
           }} />
-        
-        {(role == "admin" && (
-          <>
-          <Button
-          onClick={()=>{dispatch(setView('ProjectReport'))}}
+        <Button
+          onClick={() => { dispatch(setView('ProjectReport')) }}
           variant="contained"
-          
+
           style={{
             left: 200,
             top: 10,
@@ -156,51 +193,82 @@ console.log(photo)
         >
           Add Projects
         </Button>
-            </>
+
+        {(role == "admin" && (
+          <>
+            <Button
+              onClick={() => { dispatch(setView('ProjectReport')) }}
+              variant="contained"
+
+              style={{
+                left: 200,
+                top: 10,
+                width: 200,
+                height: 50,
+                fontSize: 20,
+              }}
+            >
+              Report
+            </Button>
+            <Button
+              onClick={handleOpen}
+              variant="contained"
+              color="success"
+              style={{
+                left: 230,
+                top: 10,
+                width: 200,
+                height: 50,
+                fontSize: 20,
+              }}
+            >
+              Add Projects
+            </Button>
+          </>
         ))}
-        
-        
-</div>
+
+
+      </div>
 
       <div div style={{
         position: "static",
-       
-        marginTop:10
+
+        marginTop: 10
       }
       }>
-  <Stack spacing={4}>
-      <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
-         {projects.filter(project=>project.name.toLowerCase().includes(sValue)).map((pro) => (
+        <Stack spacing={4}>
+          <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
+            {projects.filter(project => project.name.toLowerCase().includes(sValue)).map((pro) => (
 
-            <Grid item xs  = {4} >
-              <Box sx={{ width: 350, minHeight: 150}}>
-              <Card>
-                <CardContent
-                  component="img"
-                  src= {pro.avatar}
-                  height={"500"} 
-                  width={"500"}
-                />
-                  <CardContent>
-                    <Typography sx={{ fontSize: 18 }} gutterBottom>
-                      {pro.name}
-                    </Typography>
-                  </CardContent>
-                  <CardActions>
-                    
-                      <Button size="small" onClick = {()=>{des(pro._id)}}>Learn More</Button>
-                   
-                  </CardActions>
-                </Card>
-              </Box>
-            
+              <Grid item xs={4} >
+                <Box sx={{ width: 350, minHeight: 150 }}>
+                  <Card>
+                    <CardContent
+                      component="img"
+                      src={pro.avatar}
+                      height={"500"}
+                      width={"500"}
+                    />
+                    <CardContent>
+                      <Typography sx={{ fontSize: 18 }} gutterBottom>
+                        {pro.name}
+                      </Typography>
+                    </CardContent>
+                    <CardActions>
+
+                      <Button size="small" onClick={() => { des(pro._id) }}>Learn More</Button>
+
+                    </CardActions>
+                  </Card>
+                </Box>
+
+              </Grid>
+            ))
+
+            }
           </Grid>
-          ))
-          
-        }
-          </Grid>
-          </Stack>
-        </div>
+        </Stack>
+      </div>
 
       <Modal
         open={open}
@@ -263,15 +331,15 @@ console.log(photo)
             ) : (
               <Button variant="contained" color="success" onClick={onSubmit}>
                 Submit
-                </Button>
-                
+              </Button>
+
             )}
-            
+
           </Stack>
         </Box>
       </Modal>
 
-     
+
 
       <Snackbar
         open={openSnack}

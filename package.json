@@ -19,6 +19,7 @@
     "aos": "^2.3.4",
     "axios": "^0.27.2",
     "dayjs": "^1.11.5",
+    "firebase": "^9.21.0",
     "formik": "^2.2.9",
     "install": "^0.13.0",
     "moment": "^2.29.4",
@@ -36,9 +37,9 @@
     "react-slick": "^0.29.0",
     "react-visibility-sensor": "^5.1.1",
     "slick-carousel": "^1.8.1",
+    "sweetalert2": "^11.4.32",
     "web-vitals": "^2.1.4",
-    "yup": "^0.32.11",
-    "sweetalert2": "^11.4.32"
+    "yup": "^0.32.11"
   },
   "scripts": {
     "start": "react-scripts start",

@@ -1,0 +1,45 @@
+.blog{
+    width: 650px;
+    height: 60px;
+    background-color: rgb(209, 219, 219);
+    display: flex;
+    font-family: 'Courier New', Courier, monospace;
+    border-radius: 20px;
+}
+
+.blog h3{
+    margin-left: 50px;
+}
+
+.listofblogs{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    margin-top: 20px;
+}
+
+.listofblogs h1{
+    color: rgb(27, 22, 22);
+  text-shadow: 2px 2px 4px #7c7b7b;
+}
+
+.blogContainer{
+    display: flex;
+    flex-direction: row;
+    margin: 10px;
+}
+
+.blogContainer button{
+    width: 60px;
+    height: 40px;
+    border: 1px solid black;
+    margin: 10px;
+    font-family: 'Courier New', Courier, monospace;
+    border-radius: 20%;
+}
+
+.blogContainer button:hover {
+    background-color: rgb(80, 177, 223);
+    transition: 0.6s;
+}

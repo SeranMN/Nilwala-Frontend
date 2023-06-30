@@ -1,6 +1,7 @@
 import { initializeApp } from 'firebase/app';
 import { getFirestore } from "@firebase/firestore"
 import { getAuth, onAuthStateChanged } from 'firebase/auth';
+//import 
 // TODO: Replace the following with your app's Firebase project configuration
 const firebaseConfig = {
   

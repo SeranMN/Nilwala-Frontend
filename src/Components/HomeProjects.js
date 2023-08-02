@@ -106,7 +106,7 @@ const HomeProjects = () => {
                       left: 0,
                       width: '100%',
                       height: hoveredCardId === pro.id ? '100%' : '10%',
-                      backgroundColor: `rgba(126, 140, 156, ${hoveredCardId === pro.id ? 0.5 : 1})`,
+                      backgroundColor: `rgba(14, 5, 105, ${hoveredCardId === pro.id ? 0.5 : 1})`,
                       textAlign: 'center',
                       padding: '8px',
                       transition: 'height 0.3s ease',
@@ -115,7 +115,7 @@ const HomeProjects = () => {
                       alignItems: 'center', // Align text vertically
                     }}
                   >
-                    <Typography variant="h3" sx={{ color: '#fff', margin: 0 }}>
+                    <Typography variant="h5" sx={{ color: '#99ffff', margin: 0 }}>
                       {pro.name}
                     </Typography>
                   </Box>

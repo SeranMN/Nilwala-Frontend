@@ -21,19 +21,19 @@ import { setId } from "../../store/reducers/projectReducer";
 import { firestore } from '../Firebase'
 import { addDoc, collection } from '@firebase/firestore'
 import { getDocs } from "firebase/firestore"
-import { ref } from "firebase/storage";
+import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { storage } from "../Firebase";
 
 
 const Projects = () => {
 
- 
 
-  const ref = collection(firestore, "projects")
+
+  const Fref = collection(firestore, "projects")
 
   const dispatch = useDispatch()
   const role = sessionStorage.getItem('role')
-
+  let photUrl = ''
   const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
@@ -61,30 +61,41 @@ const Projects = () => {
   };
 
 
-  console.log(photo)
+ 
 
   const onSubmit = async () => {
-    const photo = ref(storage, 'mountains.jpg');
-    console.log("photo", photo)
+    const storageRef = ref(storage, photo.name);
+    uploadBytes(storageRef, photo).then((snapshot) => {
+      console.log('Uploaded a blob or file!');
+      getDownloadURL(ref(storage, photo.name))
+        .then((url) => {
+          photUrl = url
+          console.log(photUrl);
+          const data = {
+            name: projectName,
+            Date: date.$D + "/" + date.$M + "/" + date.$y,
+            Description: description,
+            image: photUrl
+          }
+          try {
+
+            addDoc(Fref, data)
+            setMsg("Successfully Added Projects");
+            SetSeverity("success");
+            setOpenSnack(true);
+            setToggle(!togle)
+          } catch (e) {
+            console.log(e);
+          }
+          setOpen(false);
+        })
+    });
+
+    // console.log("photo", cloud)
     let formData = new FormData();
-    const data = {
-      name: projectName,
-      Date: date.$D + "/" + date.$M + "/" + date.$y,
-      Description: description,
+    
 
-    }
-
-    try {
-
-      addDoc(ref, data)
-      setMsg("Successfully Added Projects");
-        SetSeverity("success");
-        setOpenSnack(true);
-        setToggle(!togle)
-    } catch (e) {
-      console.log(e);
-    }
-   setOpen(false);
+   
   };
 
 
@@ -92,7 +103,7 @@ const Projects = () => {
 
   const [projects, setProjects] = useState([]);
   const projectList = [];
-  
+
   useEffect(() => {
     const getProgect = async () => {
       const querySnapshot = await getDocs(collection(firestore, "projects"));
@@ -105,10 +116,10 @@ const Projects = () => {
       setProjects(projectList);
     }
     getProgect();
-}, [togle]);
+  }, [togle]);
 
 
-   
+
 
 
   const style = {
@@ -223,7 +234,7 @@ const Projects = () => {
                     <CardContent
                       component="img"
                       src={pro.image}
-                     
+
                       width={"500"}
                       sx={{ height: '300px', scale: '1', transition: 'transform 0.3s ease' }}
                     />

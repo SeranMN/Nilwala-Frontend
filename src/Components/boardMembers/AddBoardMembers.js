@@ -28,6 +28,12 @@ import MenuItem from '@mui/material/MenuItem';
 import Select, { SelectChangeEvent } from '@mui/material/Select';
 import Snackbar from '@mui/material/Snackbar';
 import MuiAlert from '@mui/material/Alert';
+import { firestore } from '../Firebase'
+import { addDoc, collection } from '@firebase/firestore'
+import { getDocs } from "firebase/firestore"
+import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
+import { storage } from "../Firebase";
+import { Switch } from '@mui/material';
 
 const Alert = React.forwardRef(function Alert(props, ref) {
     return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
@@ -72,13 +78,16 @@ BootstrapDialogTitle.propTypes = {
 };
 
 
-const AddBoardMembers = ({toggle, setToggle}) => {
+const AddBoardMembers = ({ toggle, setToggle }) => {
 
     const [open, setOpen] = React.useState(false);
     const [open1, setOpen1] = React.useState(false);
     const [value, setValue] = React.useState(dayjs('2022-09-09T21:11:54'));
     const SUPPORTED_FORMATS = ["image/jpg", "image/jpeg", "image/png"]
     const today = new Date()
+
+    const Fref = collection(firestore, "leaders")
+
 
     const handleChange = (newValue) => {
         setValue(newValue);
@@ -106,7 +115,7 @@ const AddBoardMembers = ({toggle, setToggle}) => {
 
     return (
         <>
-             <Snackbar open={open1} autoHideDuration={5000} onClose={handleClose1} anchorOrigin={{
+            <Snackbar open={open1} autoHideDuration={5000} onClose={handleClose1} anchorOrigin={{
                 vertical: "top",
                 horizontal: "center"
             }}>
@@ -131,9 +140,16 @@ const AddBoardMembers = ({toggle, setToggle}) => {
                     initialValues={{
                         boardMemberName: '',
                         designation: '',
-                        year:'',
+                        year: '',
                         photo: null,
-                        description: ''
+                        description: '',
+                        email: '',
+                        facebook: '',
+                        insta: '',
+                        linkedin: '',
+                        image: '',
+                        order: 0,
+                        phone:''
                     }}
                     validationSchema={Yup.object({
                         boardMemberName: Yup.string()
@@ -154,7 +170,14 @@ const AddBoardMembers = ({toggle, setToggle}) => {
                                     return value && SUPPORTED_FORMATS.includes(value?.type)
                                 }
                             ),
-
+                        email: Yup.string()
+                            .required('Required'),
+                        facebook: Yup.string()
+                            .required('Required'),
+                        insta: Yup.string()
+                            .required('Required'),
+                        linkedin: Yup.string()
+                            .required('Required')
                     })}
                     onSubmit={(values, { setSubmitting }) => {
                         console.log(values)
@@ -165,13 +188,68 @@ const AddBoardMembers = ({toggle, setToggle}) => {
                         formData.append('year', values.year)
                         formData.append('fileName', values.photo && values.photo.name)
                         formData.append('description', values.description)
+                        formData.append('email', values.email)
+                        formData.append('facebook', values.facebook)
+                        formData.append('instagram', values.insta)
+                        formData.append('linkedin', values.linkedin)
+                        formData.append('tno', values.phone)
+                        switch (values.designation) {
+                            case 'President': formData.append('order', 1)
+                                break;
+                            case 'Immediate Past Club President': formData.append('order', 2)
+                                break;
+                            case 'Vice President': formData.append('order', 3)
+                                break;
+                            case 'Secratary': formData.append('order', 4)
+                                break;
+                            case 'Treasurer': formData.append('order', 5)
+                                break;
+                            case 'Assitent Secratary': formData.append('order', 6)
+                                break;
+                            case 'Assitent Treasurer': formData.append('order', 7)
+                                break;
+                            case 'Advisor': formData.append('order', 8)
+                                break;
+                            default: formData.append('order', 9)
+                                break;
+                        }
 
-                        axios.post("http://localhost:5000/boardMembers/create", formData).then((res) => {
-                            setToggle(!toggle)
-                            handleClick()
-                            setOpen(false)
-                        }).catch((err) => {
-                            console.log(err)
+                        const storageRef = ref(storage, formData.get('fileName'));
+                        uploadBytes(storageRef, formData.get('file')).then((snapshot) => {
+                            console.log('Uploaded a blob or file!');
+                            getDownloadURL(ref(storage, formData.get('fileName')))
+                                .then((url) => {
+                                    formData.append('image', url)
+                                    console.log(formData)
+
+                                  
+
+                                    try {
+
+                                        addDoc(Fref, {
+                                            name: formData.get('boardMemberName'),  
+                                            designation: formData.get('designation') ,
+                                            image: formData.get('image'),
+                                            email: formData.get('email'),
+                                            facebook: formData.get('facebook'),
+                                            insta: formData.get('instagram'),
+                                            linkedin: formData.get('linkedin'),
+                                            order: parseInt(formData.get('order')),
+                                            tno: formData.get('tno')
+
+                    
+        
+                                        } )
+                                        setToggle(!toggle)
+                                        handleClick()
+                                        setOpen(false)
+
+
+                                    } catch (e) {
+                                        console.log(e);
+                                    }
+                                    setOpen(false);
+                                })
                         })
                     }}
                 >
@@ -205,10 +283,14 @@ const AddBoardMembers = ({toggle, setToggle}) => {
                                         style={{ width: 258 }}
                                     >
                                         <MenuItem value={"President"}>President</MenuItem>
+                                        <MenuItem value={"Immediate Past Club President"}>Immediate Past Club Presiden</MenuItem>
                                         <MenuItem value={"Vice President"}>Vice President</MenuItem>
                                         <MenuItem value={"Secretary"}>Secretary</MenuItem>
                                         <MenuItem value={"Treasurer"}>Treasurer</MenuItem>
-                                        <MenuItem value={"Member"}>Member</MenuItem>
+                                        <MenuItem value={"Assitent Secratary"}>Assitent Secratary</MenuItem>
+                                        <MenuItem value={"Assitent Treasurer"}>Assitent Treasurer</MenuItem>
+                                        <MenuItem value={"Advisor"}>Advisor</MenuItem>
+                                        <MenuItem value={"Director"}>Director</MenuItem>
                                     </Select>
                                 </Stack>
                                 <ErrorMessage name="designation">
@@ -249,6 +331,38 @@ const AddBoardMembers = ({toggle, setToggle}) => {
                                     />
                                 </Stack>
                                 <ErrorMessage name="description">
+                                    {msg => <div style={{ color: 'red' }} className="film-details-input-validation">{msg}</div>}
+                                </ErrorMessage>
+                                <Stack direction="row" spacing={8} alignItems='center'>
+                                    <FormLabel sx={{ color: "black" }}>Phone* :</FormLabel>
+                                    <TextField name='phone' onChange={props.handleChange} value={props.values.phone} style={{ width: 258 }} id="outlined-basic" size="small" label="phone*" variant="outlined" />
+                                </Stack>
+                                <Stack direction="row" spacing={8} alignItems='center'>
+                                    <FormLabel sx={{ color: "black" }}>Email* :</FormLabel>
+                                    <TextField name='email' onChange={props.handleChange} value={props.values.email} style={{ width: 258 }} id="outlined-basic" size="small" label="Email*" variant="outlined" />
+                                </Stack>
+                                <ErrorMessage name="email">
+                                    {msg => <div style={{ color: 'red' }} className="film-details-input-validation">{msg}</div>}
+                                </ErrorMessage>
+                                <Stack direction="row" spacing={8} alignItems='center'>
+                                    <FormLabel sx={{ color: "black" }}>Facebook Link* :</FormLabel>
+                                    <TextField name='facebook' onChange={props.handleChange} value={props.values.facebook} style={{ width: 258 }} id="outlined-basic" size="small" label="FaceBook Link*" variant="outlined" />
+                                </Stack>
+                                <ErrorMessage name="facebook">
+                                    {msg => <div style={{ color: 'red' }} className="film-details-input-validation">{msg}</div>}
+                                </ErrorMessage>
+                                <Stack direction="row" spacing={8} alignItems='center'>
+                                    <FormLabel sx={{ color: "black" }}>LinkedIn* :</FormLabel>
+                                    <TextField name='linkedin' onChange={props.handleChange} value={props.values.linkedin} style={{ width: 258 }} id="outlined-basic" size="small" label="LinkedIn*" variant="outlined" />
+                                </Stack>
+                                <ErrorMessage name="linkedin">
+                                    {msg => <div style={{ color: 'red' }} className="film-details-input-validation">{msg}</div>}
+                                </ErrorMessage>
+                                <Stack direction="row" spacing={8} alignItems='center'>
+                                    <FormLabel sx={{ color: "black" }}>Instagram Link* :</FormLabel>
+                                    <TextField name='insta' onChange={props.handleChange} value={props.values.insta} style={{ width: 258 }} id="outlined-basic" size="small" label="Instagram*" variant="outlined" />
+                                </Stack>
+                                <ErrorMessage name="insta">
                                     {msg => <div style={{ color: 'red' }} className="film-details-input-validation">{msg}</div>}
                                 </ErrorMessage>
                             </DialogContent>

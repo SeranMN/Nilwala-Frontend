@@ -104,7 +104,7 @@ const Header = () => {
                                 ))}
                             </Menu>
                         </Box>
-                        <AdbIcon sx={{ display: { xs: 'flex', md: 'none' }, mr: 1 }} />
+                       <image src = 'logo.png' />
                         <Typography
                             variant="h5"
                             noWrap
@@ -121,7 +121,7 @@ const Header = () => {
                                 textDecoration: 'none',
                             }}
                         >
-                            LOGO
+                            NilwalaLeos
                         </Typography>
 
                         {/* desktop */}
@@ -138,12 +138,7 @@ const Header = () => {
                             >
                                 Our Projects
                             </Button>
-                            <Button
-                                onClick={() => navigate('/viewblog')}
-                                sx={{ my: 2, color: 'white', display: 'block' }}
-                            >
-                                Blogs
-                            </Button>
+                            
                             <Button
                                 onClick={() => navigate('/homeLeaders')}
                                 sx={{ my: 2, color: 'white', display: 'block' }}

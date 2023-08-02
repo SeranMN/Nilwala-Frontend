@@ -43,6 +43,31 @@ const Leaders = () => {
     getLeaders();
   }, []);
 
+  useEffect(() => {
+    if (isLoaded) {
+      const projectsElements = document.querySelectorAll(".project-card");
+      const fadeInInterval = 100; // Adjust the interval (in milliseconds) between each increment in opacity
+
+      projectsElements.forEach((project, index) => {
+        let opacity = 0;
+        project.style.opacity = opacity;
+
+        const fadeInAnimation = () => {
+          opacity += 0.05; // Adjust the increment value for smoother or faster animation
+          project.style.opacity = opacity;
+
+          if (opacity < 1) {
+            requestAnimationFrame(fadeInAnimation);
+          }
+        };
+
+        setTimeout(() => {
+          requestAnimationFrame(fadeInAnimation);
+        }, fadeInInterval * index);
+      });
+    }
+  }, [isLoaded]);
+
 
   return (
     
@@ -57,7 +82,7 @@ const Leaders = () => {
               
                 members.map((member, index) => (
                   <Grid item xs={12} md={8} lg={4} key={index}>
-                    <Card sx={{ height: 500, maxWidth: 360, mt: 4, backgroundColor: '#0e0569', display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center' }}>
+                    <Card className="project-card" sx={{ height: 500, maxWidth: 360, mt: 4, backgroundColor: '#0e0569', display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center' }}>
                       <CardMedia
                         component="img"
                         sx={{ height: '300px', transition: 'transform 0.3s ease' }}

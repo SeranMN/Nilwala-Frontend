@@ -15,36 +15,7 @@ const EventContainer = () => {
                 Upcoming Events
             </div>
 
-            <UpcomingSlider />
-
-            {/* <Box
-                sx={{
-                    width: '100%',
-                    // display:'flex',
-                    // justifyContent:'space-between',
-                    // alignItems: 'center',
-                    display: "grid",
-                    gridTemplateColumns: '2fr 2fr 2fr',
-                    boxSizing: 'border-box'
-                }}>
-                <img src="/event.gif" style={{ marginRight: '10px', alignSelf: 'center', justifySelf: 'center', backgroundSize: 'cover' }} />
-                <Box
-                    sx={{
-                        width: '100%',
-                        display: 'flex',
-                        justifyContent: 'left',
-                        boxSizing: 'border-box'
-                    }}>
-                    <UpcommingEvents />
-                </Box>
-                <Box
-                    sx={{
-                        m: 5
-                    }}>
-                    <Calendar onChange={onChange} value={value} />
-                </Box>
-            </Box> */}
-
+           
         </div>
     )
 }

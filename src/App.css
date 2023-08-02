@@ -43,3 +43,7 @@
 body {
 overflow-x: hidden;
 }
+.project-card {
+  /* Set the initial opacity to 0 */
+  opacity: 0;
+}

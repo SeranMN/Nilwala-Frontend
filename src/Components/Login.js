@@ -1,4 +1,4 @@
-import React, {useState } from 'react'
+import React, { useState } from 'react'
 import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import CssBaseline from '@mui/material/CssBaseline';
@@ -15,51 +15,28 @@ import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { useNavigate } from 'react-router-dom';
 import Logo from './275370071_766907458022966_8343268332153914462_n.jpg'
 import {auth}  from './Firebase';
-import {signInWithEmailAndPassword } from "firebase/auth";
+import { signInWithEmailAndPassword } from "firebase/auth";
 const Login = () => {
     const theme = createTheme();
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
     const navigate = useNavigate()
     const handleSubmit = (e) => {
-        signInWithEmailAndPassword(auth, email, password)
+        e.preventDefault();
+
+        const au = auth;
+        signInWithEmailAndPassword(au, email, password)
             .then((userCredential) => {
                 // Signed in 
                 navigate('/adminDashboard');
                 // ...
             })
             .catch((error) => {
-                console.log(error.message)
+                console.log(error.message);
 
-                alert('Wrong')
-
+                alert(error.message);
             });
-
-
-
-
-        //     axios.post(`http://localhost:5000/login/${email}`, { password:password })
-        //   .then((data) => {
-        //     console.log(data);
-        //     if (data.data == 'Invalid') {
-        //       alert('Wrong')
-        //     } else {
-        //       sessionStorage.setItem('role', data.data.role)
-        //       sessionStorage.setItem('mail',data.data.email)
-        //       if (data.data.role) {
-        //         navigate('/adminDashboard');
-        //       } else {
-        //         navigate('/')
-        //       }
-
-
-        //     }
-
-
-        //   }).catch((err) => {
-        //     console.log(err)
-        // })
-    }
+    };
 
     return (
         <ThemeProvider theme={theme}>

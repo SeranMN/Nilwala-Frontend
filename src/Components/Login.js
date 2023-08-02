@@ -28,6 +28,7 @@ const Login = () => {
         signInWithEmailAndPassword(au, email, password)
             .then((userCredential) => {
                 // Signed in 
+                console.log(userCredential)
                 navigate('/adminDashboard');
                 // ...
             })

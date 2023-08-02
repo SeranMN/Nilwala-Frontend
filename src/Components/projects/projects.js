@@ -1,5 +1,4 @@
 import { useState, useEffect, forwardRef, React } from "react";
-import axios from "axios";
 import Modal from "@mui/material/Modal";
 import { TextareaAutosize, Typography } from "@mui/material";
 import Box from "@mui/material/Box";
@@ -21,9 +20,14 @@ import { setView } from '../../store/reducers/containerReducer';
 import { setId } from "../../store/reducers/projectReducer";
 import { firestore } from '../Firebase'
 import { addDoc, collection } from '@firebase/firestore'
-import { doc, getDocs } from "firebase/firestore"
-import { async } from "@firebase/util";
+import { getDocs } from "firebase/firestore"
+import { ref } from "firebase/storage";
+import { storage } from "../Firebase";
+
+
 const Projects = () => {
+
+ 
 
   const ref = collection(firestore, "projects")
 
@@ -60,14 +64,9 @@ const Projects = () => {
   console.log(photo)
 
   const onSubmit = async () => {
+    const photo = ref(storage, 'mountains.jpg');
     console.log("photo", photo)
     let formData = new FormData();
-    //  // formData.append('file', photo)
-    //   formData.append('name', projectName)
-    //   formData.append('Date', date.$D + "/" + date.$M + "/" + date.$y)
-    //   formData.append('Description', description)
-    //   //formData.append('fileName', photo.name)
-
     const data = {
       name: projectName,
       Date: date.$D + "/" + date.$M + "/" + date.$y,
@@ -76,6 +75,7 @@ const Projects = () => {
     }
 
     try {
+
       addDoc(ref, data)
       setMsg("Successfully Added Projects");
         SetSeverity("success");
@@ -84,22 +84,7 @@ const Projects = () => {
     } catch (e) {
       console.log(e);
     }
-    // axios
-    //   .post("http://localhost:5000/project/add", formData)
-    //   .then(() => {
-    //     setMsg("Successfully Added Projects");
-    //     SetSeverity("success");
-    //     setOpenSnack(true);
-    //     setToggle(!togle)
-    //   })
-    //   .catch((err) => {
-    //     setMsg("oops! Somthing Went Wrong");
-    //     SetSeverity("error");
-    //     setOpenSnack(true);
-    //     console.log(err);
-    //   });
-
-    setOpen(false);
+   setOpen(false);
   };
 
 
@@ -118,14 +103,6 @@ const Projects = () => {
         projectList.push({ id: doc.id, ...doc.data() });
       });
       setProjects(projectList);
-
-     
-      // axios
-      //   .get("http://localhost:5000/project")
-      //   .then((res) => {
-      //     setProjects(res.data);
-      //   })
-      //   .catch((err) => console.log(err));
     }
     getProgect();
 }, [togle]);
@@ -194,7 +171,7 @@ const Projects = () => {
           Add Projects
         </Button>
 
-        {(role == "admin" && (
+        {(role === "admin" && (
           <>
             <Button
               onClick={() => { dispatch(setView('ProjectReport')) }}
@@ -238,16 +215,17 @@ const Projects = () => {
       }>
         <Stack spacing={4}>
           <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
-            {projects.filter(project => project.name.toLowerCase().includes(sValue)).map((pro) => (
+            {projects.map((pro) => (
 
               <Grid item xs={4} >
                 <Box sx={{ width: 350, minHeight: 150 }}>
                   <Card>
                     <CardContent
                       component="img"
-                      src={pro.avatar}
-                      height={"500"}
+                      src={pro.image}
+                     
                       width={"500"}
+                      sx={{ height: '300px', scale: '1', transition: 'transform 0.3s ease' }}
                     />
                     <CardContent>
                       <Typography sx={{ fontSize: 18 }} gutterBottom>
@@ -319,12 +297,12 @@ const Projects = () => {
             />
             <FormLabel sx={{ color: "black", minWidth: '105px' }}>Upload Photo* :</FormLabel>
             <input id="file" name="file" type="file" onChange={(e) => setPhoto(e.target.files[0])} />
-            {projectName == "" ||
-              date == "" ||
-              description == "" ||
-              projectName == null ||
-              date == null ||
-              description == null ? (
+            {projectName === "" ||
+              date === "" ||
+              description === "" ||
+              projectName === null ||
+              date === null ||
+              description === null ? (
               <Button variant="contained" color="success" disabled="true">
                 Submit
               </Button>

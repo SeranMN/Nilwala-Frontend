@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, {useState } from 'react'
 import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import CssBaseline from '@mui/material/CssBaseline';
@@ -12,47 +12,58 @@ import Grid from '@mui/material/Grid';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
-import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import Logo from './275370071_766907458022966_8343268332153914462_n.jpg'
-
-
+import {auth}  from './Firebase';
+import {signInWithEmailAndPassword } from "firebase/auth";
 const Login = () => {
     const theme = createTheme();
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
-    const [toggle, setToggle] = useState(false);
     const navigate = useNavigate()
-
     const handleSubmit = (e) => {
-        e.preventDefault()
+        signInWithEmailAndPassword(auth, email, password)
+            .then((userCredential) => {
+                // Signed in 
+                navigate('/adminDashboard');
+                // ...
+            })
+            .catch((error) => {
+                console.log(error.message)
 
-        axios.post(`http://localhost:5000/login/${email}`, { password:password })
-      .then((data) => {
-        console.log(data);
-        if (data.data == 'Invalid') {
-          alert('Wrong')
-        } else {
-          sessionStorage.setItem('role', data.data.role)
-          sessionStorage.setItem('mail',data.data.email)
-          if (data.data.role) {
-            navigate('/adminDashboard');
-          } else {
-            navigate('/')
-          }
-          
-          
-        }
-        
-        
-      }).catch((err) => {
-        console.log(err)
-    })
-  }
+                alert('Wrong')
+
+            });
+
+
+
+
+        //     axios.post(`http://localhost:5000/login/${email}`, { password:password })
+        //   .then((data) => {
+        //     console.log(data);
+        //     if (data.data == 'Invalid') {
+        //       alert('Wrong')
+        //     } else {
+        //       sessionStorage.setItem('role', data.data.role)
+        //       sessionStorage.setItem('mail',data.data.email)
+        //       if (data.data.role) {
+        //         navigate('/adminDashboard');
+        //       } else {
+        //         navigate('/')
+        //       }
+
+
+        //     }
+
+
+        //   }).catch((err) => {
+        //     console.log(err)
+        // })
+    }
 
     return (
         <ThemeProvider theme={theme}>
-            <Grid container component="main" sx={{ height: '100vh'  }}>
+            <Grid container component="main" sx={{ height: '100vh' }}>
                 <CssBaseline />
                 <Grid
                     item
@@ -63,7 +74,7 @@ const Login = () => {
                         backgroundImage: `url(${Logo})`,
                         backgroundRepeat: 'no-repeat',
                         backgroundColor: '#0e0569',
-                        marginTop:'-140px'
+                        marginTop: '-140px'
                     }}
                 />
                 <Grid item xs={12} sm={8} md={3} component={Paper} elevation={6} square>
@@ -105,7 +116,7 @@ const Login = () => {
                                 type="password"
                                 id="password"
                                 onChange={(e) => setPassword(e.target.value)}
-                                valur={password}
+                                value={password}
                                 autoComplete="current-password"
                             />
                             <FormControlLabel

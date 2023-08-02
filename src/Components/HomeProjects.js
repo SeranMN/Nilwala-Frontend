@@ -1,88 +1,112 @@
-import { useState, useEffect, forwardRef, React } from "react";
-import Container from "@mui/material/Container";
+import React, { useState, useEffect } from "react";
 import Card from "@mui/material/Card";
-import CardActions from "@mui/material/CardActions";
-import CardContent from "@mui/material/CardContent";
 import CardMedia from "@mui/material/CardMedia";
-import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
-import axios from "axios";
 import Grid from "@mui/material/Grid";
 import { Box } from "@mui/material";
-import { Stack } from "@mui/system";
-import { styled } from '@mui/material/styles';
-import { doc, getDocs, collection } from "firebase/firestore"
-import { firestore } from './Firebase'
-import Paper from '@mui/material/Paper';
+import { getDocs, collection } from "firebase/firestore";
+import { firestore } from './Firebase';
+import Skeleton from '@mui/material/Skeleton';
+
 const HomeProjects = () => {
   const [projects, setProjects] = useState([]);
-  const projectList = [];
+  const [hoveredCardId, setHoveredCardId] = useState(null);
+  const [isLoaded, setIsLoaded] = useState(false);
+
   useEffect(() => {
-    const getProgect = async () => {
+    const getProjects = async () => {
       const querySnapshot = await getDocs(collection(firestore, "projects"));
-      console.log(querySnapshot.data);
-      //
-      querySnapshot.forEach((doc) => {
-        // doc.data() is never undefined for query doc snapshots
-        projectList.push({ id: doc.id, ...doc.data() });
-        console.log(doc.data())
-      });
+      const projectList = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
       setProjects(projectList);
+      setIsLoaded(true);
     }
 
-    
-      getProgect();
-      //   axios
-      //     .get("http://localhost:5000/project")
-      //     .then((res) => {
-      //       setProjects(res.data);
-      //     })
-      //     .catch((err) => console.log(err));
-      // }, []);
-    }
-,[])
-  const Item = styled(Paper)(({ theme }) => ({
-    backgroundColor: '#373e98',
-    textAlign: 'center',
+    getProjects();
+  }, []);
 
-  }));
+  const handleHover = (cardId, isHovered) => {
+    if (isHovered) {
+      setHoveredCardId(cardId);
+    } else {
+      setHoveredCardId(null);
+    }
+  };
+
   return (
-    <div style={{ backgroundColor: '#CCCCCC', padding: '2px', height: '100%' }}>
-      <Box sx={{ flexGrow: 1 }}>
-        <Grid container spacing={1} sx={{ justifyContent: 'center', margin: 'auto' }}>
-          {projects.map((pro) => (
-            <>
-              <Grid item xs={12} md={5} lg={4} paddingRight={2}>
-                <>
-                  <Grid>
-                    <Card sx={{ margin: '2px', height: '400px', width: '500px' }} >
-                      <Card>
-                        <CardMedia
-                          component="img"
-                          src={pro && pro.avatar}
-                          alt="Live from space album cover"
-                          sx={{ height: '300px', scale: '1' }}
-                        />
-                      </Card>
-                      <Grid >
-                        
-                        <Typography variant="h3" sx={{ textAlign: 'center', mt: '20px', textDecoration: 'bold' }} color='#0e0569' >
-                          {pro.name}
-                        </Typography>
-                        
-                      </Grid>
-
-                    </Card>
-                  </Grid>
-                </>
+    <Box sx={{ width: '100%', backgroundColor: '#0C243C', display: 'flex', justifyContent: 'center' }}>
+      <Box sx={{ width: '100%', maxWidth: '1200px', padding: '40px 20px', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+        <Box sx={{ paddingBottom: '75px' }}>
+          <Typography variant="h3" sx={{ color: '#55C2C3', margin: 0 }}>Our Projects</Typography>
+        </Box>
+        {isLoaded ? (
+          <Grid container spacing={1} justifyContent="center" alignItems="center">
+            {projects.map((pro) => (
+              <Grid item key={pro.id} xs={12} sm={6} md={4} lg={4}>
+                {console.log(pro)}
+                <Card
+                  onMouseEnter={() => handleHover(pro.id, true)}
+                  onMouseLeave={() => handleHover(pro.id, false)}
+                  sx={{
+                    margin: '2px',
+                    height: '300px',
+                    width: '360px',
+                    position: 'relative',
+                    overflow: 'hidden',
+                  }}
+                >
+                  <CardMedia
+                    component="img"
+                    src={pro.image}
+                    alt="Live from space album cover"
+                    sx={{ height: '300px', scale: '1', transition: 'transform 0.3s ease' }}
+                    style={{
+                      transform: hoveredCardId === pro.id ? 'scale(1.2)' : 'scale(1)',
+                    }}
+                  />
+                  <Box
+                    sx={{
+                      position: 'absolute',
+                      bottom: '0',
+                      left: 0,
+                      width: '100%',
+                      height: hoveredCardId === pro.id ? '100%' : '10%',
+                      backgroundColor: `rgba(126, 140, 156, ${hoveredCardId === pro.id ? 0.5 : 1})`,
+                      textAlign: 'center',
+                      padding: '8px',
+                      transition: 'height 0.3s ease',
+                      display: 'flex',
+                      justifyContent: 'center',
+                      alignItems: 'center', // Align text vertically
+                    }}
+                  >
+                    <Typography variant="h3" sx={{ color: '#fff', margin: 0 }}>
+                      {pro.name}
+                    </Typography>
+                  </Box>
+                </Card>
               </Grid>
-            </>
-
-          ))}
-        </Grid>
+            ))}
+          </Grid>
+        ) : (
+            <Box sx = {{ height:'100vh' }}>
+            <Box sx={{ width: 300 }}>
+            <Skeleton />
+            <Skeleton animation="wave" />
+            <Skeleton animation={true} />
+            </Box>
+            <Box sx={{ width: 300, height:'100vh' }}>
+            <Skeleton />
+            <Skeleton animation="wave" />
+            <Skeleton animation={true} />
+          </Box><Box sx={{ width: 300, height:'100vh' }}>
+            <Skeleton />
+            <Skeleton animation="wave" />
+            <Skeleton animation={true} />
+              </Box>
+              </Box>
+        )}
       </Box>
-    </div>
-
+    </Box>
   );
 };
 

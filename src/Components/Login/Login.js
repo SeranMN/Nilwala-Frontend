@@ -13,30 +13,9 @@ const Login = () => {
   const [pwd, setPwd] = useState();
 
   const login = () => {
-    auth.signInWithEmailAndPassword(email, pwd) 
+    auth.signInWithEmailAndPassword(email, pwd)
     
-    
-    // axios.post(`http://localhost:5000/login/${email}`, { password:pwd })
-    //   .then((data) => {
-    //     console.log(data);
-    //     if (data.data == 'Invalid') {
-    //       alert('Wrong')
-    //     } else {
-    //       sessionStorage.setItem('role', data.data.role)
-    //       sessionStorage.setItem('mail',data.data.email)
-    //       if (data.data.role) {
-    //         navigate('/adminDashboard');
-    //       } else {
-    //         navigate('/')
-    //       }
-          
-          
-    //     }
-        
-        
-    //   }).catch((err) => {
-    //     console.log(err)
-    // })
+  
   }
 
   return (

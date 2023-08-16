@@ -68,10 +68,10 @@ const HomeProjects = () => {
 
 
   return (
-    <Box sx={{ width: '100%', backgroundColor: '#0C243C', display: 'flex', justifyContent: 'center' }}>
+    <Box sx={{ width: '100%', background:'background-image: linear-gradient(to right bottom, #044975, #003f75, #003474, #002770, #171869)', display: 'flex', justifyContent: 'center' }}>
       <Box sx={{ width: '100%', maxWidth: '1200px', padding: '40px 20px', display: 'flex', flexDirection: 'column', alignItems: 'center' }} ref={ref}>
         <Box sx={{ paddingBottom: '75px' }}>
-          <Typography variant="h3" sx={{ color: '#55C2C3', margin: 0 }}>Our Projects</Typography>
+          <Typography variant="h3" sx={{ color: 'white', margin: 0 }}>Our Projects</Typography>
         </Box>
         {isLoaded ? (
           <Grid container spacing={1} justifyContent="center" alignItems="center">

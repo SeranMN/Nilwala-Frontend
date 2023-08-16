@@ -17,7 +17,7 @@ const Countup = () => {
         <Box sx={{
             width: '100%',
             height: 300,
-            backgroundColor: '#0C243C',
+            backgroundColor: 'black',
             
         }}
         >

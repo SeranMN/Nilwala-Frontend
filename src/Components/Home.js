@@ -15,7 +15,7 @@ const Home = () => {
         <HomeCards/>
         <Divider/>
         <Countup/>
-        <EventContainer/>
+        {/* <EventContainer/> */}
     </div>
   )
 }

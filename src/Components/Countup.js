@@ -17,18 +17,19 @@ const Countup = () => {
         <Box sx={{
             width: '100%',
             height: 300,
-            backgroundColor: '#0e0569',
+            backgroundColor: '#0C243C',
+            
         }}
         >
             <Grid container pt={6}>
-                <Grid item md={4} xs={8} data-aos="fade-right" data-aos-duration="1000">
+                <Grid item md={4} xs={12} data-aos="fade-right" data-aos-duration="1000">
                     <img src="/project.png" style={{ height: '50px' }} />
-                    <Typography variant="h3" component="div" color='white' gutterBottom >
+                    <Typography variant="h3" component="div" color='White' gutterBottom >
                         Projects
                     </Typography>
                     <CountUp
                         start={0}
-                        end={30}
+                        end={200}
                         duration={2}
                         decimal=","
                         suffix='+'
@@ -37,19 +38,19 @@ const Countup = () => {
                             <VisibilitySensor
                                 onChange={start}
                             >
-                                <span style={{ fontSize: '30px', color: 'white' }} ref={countUpRef} />
+                                <span style={{ fontSize: '30px', color: 'White' }} ref={countUpRef} />
                             </VisibilitySensor>
                         )}
                     </CountUp>
                 </Grid>
-                <Grid item md={4} xs={8} data-aos="fade-right" data-aos-duration="1000">
+                <Grid item md={4} xs={12} data-aos="fade-right" data-aos-duration="1000">
                     <img src="/award.png" style={{ height: '50px' }} />
-                    <Typography variant="h3" component="div" color='white' gutterBottom>
+                    <Typography variant="h3" component="div" color='White' gutterBottom>
                         Awards
                     </Typography>
                     <CountUp
                         start={0}
-                        end={30}
+                        end={100}
                         duration={2}
                         decimal=","
                         suffix='+'
@@ -58,14 +59,14 @@ const Countup = () => {
                             <VisibilitySensor
                                 onChange={start}
                             >
-                                <span style={{ fontSize: '30px', color: 'white' }} ref={countUpRef} />
+                                <span style={{ fontSize: '30px', color: 'White' }} ref={countUpRef} />
                             </VisibilitySensor>
                         )}
                     </CountUp>
                 </Grid>
-                <Grid item md={4} xs={8} data-aos="fade-right" data-aos-duration="1000">
+                <Grid item md={4} xs={12} data-aos="fade-right" data-aos-duration="1000">
                     <img src="/proile.png" style={{ height: '50px' }} />
-                    <Typography variant="h3" component="div" color='white' gutterBottom>
+                    <Typography variant="h3" component="div" color='White' gutterBottom>
                         Members
                     </Typography>
                     <CountUp
@@ -79,7 +80,7 @@ const Countup = () => {
                             <VisibilitySensor
                                 onChange={start}
                             >
-                                <span style={{ fontSize: '30px', color: 'white' }} ref={countUpRef} />
+                                <span style={{ fontSize: '30px', color: 'White' }} ref={countUpRef} />
                             </VisibilitySensor>
                         )}
                     </CountUp>

@@ -10,7 +10,7 @@ import Loader from './PreLoader/Loader'
 const Home = () => {
   return (
     <div style={{overflow:'clip'}}>
-        <Loader/>
+
         <HomeBanner/>
         <HomeCards/>
         <Divider/>

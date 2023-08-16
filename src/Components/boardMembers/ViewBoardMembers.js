@@ -1,113 +1,162 @@
-import React, { useEffect, useState } from 'react'
-import Container from '@mui/material/Container';
-// import FilterStatus from './FilterStatus';
-import MemberGenerateReport from './MemberGenerateReport';
-import AddBoardMembers from './AddBoardMembers';
+import React, { useState, useEffect } from 'react'
+import { Typography } from '@mui/material'
+import Card from '@mui/material/Card';
+import CardHeader from '@mui/material/CardHeader';
+import CardMedia from '@mui/material/CardMedia';
 import Grid from '@mui/material/Grid';
-import FilterYear from '../eventScheduling/FilterYear';
-import Designation from './Designation';
-import axios from 'axios';
-import MemberList from './MemberList';
-import MemberSearchBar from './MemberSearchBar';
-import { useSelector } from 'react-redux';
-import MemberYearFilter from './MemberYearFilter';
+import { Box } from '@mui/material';
+import { getDocs, collection } from "firebase/firestore";
+import { firestore } from '../Firebase';
+import PhoneIcon from '@mui/icons-material/Phone';
+import EmailIcon from '@mui/icons-material/Email';
+import FacebookIcon from '@mui/icons-material/Facebook';
+import { Instagram } from '@mui/icons-material';
+import { LinkedIn } from '@mui/icons-material';
+import Skeleton from '@mui/material/Skeleton';
+import { query, orderBy, limit } from "firebase/firestore";
+// Add other social media icons if needed
 
-const ViewBoardMembers = () => {
+
+
+const Leaders = () => {
 
     const [members, setMembers] = useState([])
-    const [toggle, setToggle] = useState(false)
-    const [searchTerm, setSearchTerm] = useState("");
-    const year = useSelector(state => state.filterBoards.year)
-    const designation = useSelector(state => state.filterBoards.designation)
+    const [isLoaded, setIsLoaded] = useState(false);
+    const d = new Date();
+    let year = d.getFullYear();
+
 
 
     useEffect(() => {
-        if (!searchTerm && !year && !designation) {
-            function getBoardMembers() {
-                axios.get("http://localhost:5000/boardMembers/viewMembers").then((res) => {
-                    console.log(res.data)
-                    setMembers(res.data)
-                }).catch((err) => {
-                    alert(err.message);
-                    console.log(err.message);
-                })
+        const getLeaders = async () => {
+            try {
+                let leadersRef = collection(firestore, "leaders")
+                const q = query(leadersRef, orderBy("order", "asc"));
+                const querySnapshot = await getDocs(q);
+                const projectList = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+                setMembers(projectList);
+                setIsLoaded(true)
+            } catch (error) {
+                console.error("Error fetching leaders:", error);
             }
-            getBoardMembers()
-        }
-    }, [toggle, searchTerm,year,designation])
+        };
 
-    const findMembers = (boardMemberName) => {
-        if (boardMemberName) {
-            axios.get(`http://localhost:5000/boardMembers/search/${boardMemberName}`)
 
-                .then((res) => {
-                    let arr = res.data;
-                    let i;
-                    let list = [];
-                    for (i = 0; i < arr.length; i++) {
-                        list.push(arr[i]);
-                    }
-                    setMembers(list)
-                })
-                .catch((err) => {
-                    console.log(err);
-                });
-
-        }
-    };
+        getLeaders();
+    }, []);
 
     useEffect(() => {
-        let query
-        if (year && designation) {
-            query = `?designation=${designation}&year=${year}`
-        }
-        else if (year) {
-            query = `?year=${year}`
-        }
-        else if (designation) {
-            query = `?designation=${designation}`
-        }
-        axios.get(`http://localhost:5000/boardMembers/filter${query}`)
-            .then((res) => {
-                console.log(res.data, "res.data")
-                let arr = res.data;
-                let i;
-                let list = [];
-                for (i = 0; i < arr.length; i++) {
-                    list.push(arr[i]);
-                }
-                setMembers(list)
-            })
-            .catch((err) => {
-                console.log(err);
-            });
+        if (isLoaded) {
+            const projectsElements = document.querySelectorAll(".project-card");
+            const fadeInInterval = 100; // Adjust the interval (in milliseconds) between each increment in opacity
 
-    }, [year,designation])
+            projectsElements.forEach((project, index) => {
+                let opacity = 0;
+                project.style.opacity = opacity;
+
+                const fadeInAnimation = () => {
+                    opacity += 0.05; // Adjust the increment value for smoother or faster animation
+                    project.style.opacity = opacity;
+
+                    if (opacity < 1) {
+                        requestAnimationFrame(fadeInAnimation);
+                    }
+                };
+
+                setTimeout(() => {
+                    requestAnimationFrame(fadeInAnimation);
+                }, fadeInInterval * index);
+            });
+        }
+    }, [isLoaded]);
+
 
     return (
-        <>
-            <Container sx={{ ml: 40 }}>
-                <MemberSearchBar searchTerm={searchTerm} setSearchTerm={setSearchTerm} findMembers={findMembers} />
-            </Container>
-            <Container sx={{ mt: 4 }}>
-                <Grid container spacing={3}>
-                    <Grid item xs={12} md={8} lg={2}>
-                        <Designation />
+
+
+        <div style={{ backgroundColor: '#0C243C', padding: '2px', height: '100%' }}>
+            <div style={{ m: '5px' }} >
+
+                <Typography variant="h2" sx={{ textAlign: 'center', mt: '35px', textDecoration: 'bold' }} color='#55C2C3'>Our Leaders</Typography>
+                <Box sx={{ width: '75%', justifyContent: 'center', margin: 'auto', mt: 2, paddingBottom: 'px' }}>
+                    <Grid sx={{ justifyContent: 'center', margin: 'auto' }} container spacing={1}>
+                        {isLoaded ? (
+
+                            members.map((member, index) => (
+
+                                <Grid item xs={12} md={8} lg={4} key={index}>
+
+                                    <Card className="project-card" sx={{ height: 500, maxWidth: 360, mt: 4, backgroundColor: '#0e0569', display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center' }}>
+                                        <CardMedia
+
+                                            component="img"
+                                            sx={{ height: '300px', transition: 'transform 0.3s ease' }}
+                                            image={member.image}
+                                            alt="Paella dish"
+                                        />
+                                        <CardHeader
+                                            sx={{ color: 'white' }}
+                                            title={member.designation}
+                                        />
+                                        <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+                                            <Typography sx={{ color: '#99ffff' }}>{member.name}</Typography>
+                                            <Box sx={{ display: 'flex', alignItems: 'center', color: '#99ffff' }}>
+                                                <PhoneIcon sx={{ marginRight: '4px' }} />
+                                                <Typography>{member.tno}</Typography>
+                                            </Box>
+                                            <Box sx={{ display: 'flex', alignItems: 'center', color: '#99ffff' }}>
+                                                <EmailIcon sx={{ marginRight: '4px' }} />
+                                                <Typography>{member.email}</Typography>
+                                            </Box>
+                                            {/* Add more social media icons if needed */}
+                                            <Box sx={{ display: 'flex', alignItems: 'center', color: '#99ffff' }}>
+
+
+                                                <a href={member.facebook} target="_blank" rel="noopener noreferrer" sx={{ color: 'inherit', marginRight: '4px' }}>
+                                                    <FacebookIcon />
+                                                </a>
+                                                <a href={member.insta} target="_blank" rel="noopener noreferrer" sx={{ color: 'inherit', marginRight: '4px' }}>
+                                                    <Instagram />
+                                                </a>
+                                                <a href={member.linkedin} target="_blank" rel="noopener noreferrer" sx={{ color: 'inherit', marginRight: '4px' }}>
+                                                    <LinkedIn />
+                                                </a>
+
+                                            </Box>
+                                        </Box>
+                                    </Card>
+
+                                </Grid>
+
+                            ))) : (
+
+                            <Box sx={{ height: '100vh' }}>
+                                <Box sx={{ width: 300 }}>
+                                    <Skeleton />
+                                    <Skeleton animation="wave" />
+                                    <Skeleton animation={true} />
+                                </Box>
+                                <Box sx={{ width: 300, height: '100vh' }}>
+                                    <Skeleton />
+                                    <Skeleton animation="wave" />
+                                    <Skeleton animation={true} />
+                                </Box><Box sx={{ width: 300, height: '100vh' }}>
+                                    <Skeleton />
+                                    <Skeleton animation="wave" />
+                                    <Skeleton animation={true} />
+                                </Box>
+                            </Box>
+
+                        )}
+
+
+
                     </Grid>
-                    <Grid item xs={12} md={8} lg={2}>
-                        < MemberYearFilter/>
-                    </Grid>
-                    <Grid item xs={12} md={8} lg={2}>
-                        <MemberGenerateReport />
-                    </Grid>
-                    <Grid item sx={{ display: "flex", justifyContent: "flex-end" }} xs={12} md={8} lg={6}>
-                        <AddBoardMembers toggle={toggle} setToggle={setToggle} />
-                    </Grid>
-                </Grid>
-            </Container>
-            <MemberList members={members} toggle={toggle} setToggle={setToggle} />
-        </>
+
+                </Box>
+            </div>
+        </div>
     )
 }
 
-export default ViewBoardMembers
+export default Leaders

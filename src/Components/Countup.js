@@ -17,7 +17,7 @@ const Countup = () => {
         <Box sx={{
             width: '100%',
             height: 300,
-            backgroundColor: '#0C243C',
+            background:'linear-gradient(250deg, #005C97 0%, #363795 40%, #005C9 100%)',
             
         }}
         >
@@ -25,7 +25,7 @@ const Countup = () => {
                 <Grid item md={4} xs={12} data-aos="fade-right" data-aos-duration="1000">
                     <img src="/project.png" style={{ height: '50px' }} />
                     <Typography variant="h3" component="div" color='White' gutterBottom >
-                        Projects
+                        PROJECTS
                     </Typography>
                     <CountUp
                         start={0}
@@ -46,7 +46,7 @@ const Countup = () => {
                 <Grid item md={4} xs={12} data-aos="fade-right" data-aos-duration="1000">
                     <img src="/award.png" style={{ height: '50px' }} />
                     <Typography variant="h3" component="div" color='White' gutterBottom>
-                        Awards
+                        AWARDS
                     </Typography>
                     <CountUp
                         start={0}
@@ -67,7 +67,7 @@ const Countup = () => {
                 <Grid item md={4} xs={12} data-aos="fade-right" data-aos-duration="1000">
                     <img src="/proile.png" style={{ height: '50px' }} />
                     <Typography variant="h3" component="div" color='White' gutterBottom>
-                        Members
+                        MEMBERS
                     </Typography>
                     <CountUp
                         start={0}

@@ -1,14 +1,23 @@
 .App {
   text-align: center;
   overflow: auto;
-  background-color: #0C243C;
+  background:linear-gradient(0deg, #005C97 0%, #363795 100%);
   
+}
+*{
+  font-family: 'Poppins';
+}
+.but:hover{
+  color: #282c34;
 }
 
 .App-logo {
   height: 40vmin;
   pointer-events: none;
 }
+
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;900&display=swap');
+
 
 @media (prefers-reduced-motion: no-preference) {
   .App-logo {

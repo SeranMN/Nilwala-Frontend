@@ -45,7 +45,7 @@ const Header = () => {
 
     return (
         <>
-            <AppBar sx={{ backgroundColor: '#0e0569' }} position="sticky">
+            <AppBar sx={{ background:'linear-gradient(133deg, #005C97 0%, #363795 100%)' }} position="sticky">
                 <Container maxWidth="xl">
                     <Toolbar disableGutters>
                         {/* <AdbIcon sx={{ display: { xs: 'none', md: 'flex' }, mr: 1 }} /> */}
@@ -58,14 +58,14 @@ const Header = () => {
                             sx={{
                                 mr: 2,
                                 display: { xs: 'none', md: 'flex' },
-                                fontFamily: 'monospace',
-                                fontWeight: 700,
+                                fontFamily: 'Poppins',
+                                fontWeight: 400,
                                 letterSpacing: '.3rem',
                                 color: 'inherit',
                                 textDecoration: 'none',
                             }}
                         >
-                            NilwalaLeos
+                            
                         </Typography>
 
                         <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}>
@@ -126,20 +126,20 @@ const Header = () => {
 
                         {/* desktop */}
                         <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
-                            <Button
+                            <Button className='but'
                                 onClick={() => navigate('/')}
                                 sx={{ my: 2, color: 'white', display: 'block' }}
                             >
                                 Home
                             </Button>
-                            <Button
+                            <Button className='but'
                                 onClick={() => navigate('/homeProjects')}
                                 sx={{ my: 2, color: 'white', display: 'block' }}
                             >
                                 Our Projects
                             </Button>
                             
-                            <Button
+                            <Button className='but'
                                 onClick={() => navigate('/homeLeaders')}
                                 sx={{ my: 2, color: 'white', display: 'block' }}
                             >

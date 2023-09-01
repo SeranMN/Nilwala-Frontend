@@ -18,6 +18,7 @@ import Updateblog from "./Components/Blog/Updateblog";
 import ViewUpcomingEvent from './Components/ViewUpcomingEvent';
 import Header from './Components/Header';
 import Leaders from './Components/Leaders';
+import NilwalaChronicle from './Components/NilwalaChronicle';
 import HomeBlogs from './Components/HomeBlogs';
 import HomeAboutUs from './Components/HomeAboutUs';
 import HomeProjects from './Components/HomeProjects';
@@ -38,6 +39,7 @@ const Routing = () => {
                     <Route path='/upcomingEvents/:id' exact element={<ViewUpcomingEvent />} />
                     <Route path='/' exact element={<Home />} />
                     <Route path='/homeLeaders' exact element={<Leaders />} />
+                    <Route path='/nilwalachronicle' exact element={<NilwalaChronicle />} />
                     <Route path='/homeBlogs' exact element={<HomeBlogs />} />
                     <Route path='/homeAboutUs' exact element={<HomeAboutUs />} />
                     <Route path='/homeProjects' exact element={<HomeProjects />} />

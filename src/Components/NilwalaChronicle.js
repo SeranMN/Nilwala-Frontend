@@ -17,7 +17,7 @@ function Iframe(props) {
 
 const Home = () => {
 
-  const iframe2 = '<iframe style="width:90vw;height:90vh" src="https:anyflip.com/bookcase/mcenl/"  seamless="seamless" scrolling="no" frameborder="0" allowtransparency="true" allowfullscreen="true" ></iframe>'
+  const iframe2 = '<iframe style="width:90vw;height:90vh" src="https://anyflip.com/bookcase/mcenl/"  seamless="seamless" scrolling="no" frameborder="0" allowtransparency="true" allowfullscreen="true" ></iframe>'
 
   return (
     <div style={{overflow:'clip'}}>

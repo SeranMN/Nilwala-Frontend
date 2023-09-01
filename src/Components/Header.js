@@ -145,6 +145,12 @@ const Header = () => {
                             >
                                 Our Leaders
                             </Button>
+                            <Button className='but'
+                                onClick={() => navigate('/nilwalachronicle')}
+                                sx={{ my: 2, color: 'white', display: 'block' }}
+                            >
+                                Nilwala Chronicle
+                            </Button>
                         </Box>
 
                         <Box sx={{ flexGrow: 0 }}>
